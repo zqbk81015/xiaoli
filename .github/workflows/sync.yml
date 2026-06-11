@@ -1,0 +1,23 @@
+name: Sync to GitHub
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Health check
+        run: |
+          python3 .github/scripts/health_check.py
+
+      - name: Update index
+        run: |
+          date +"%Y-%m-%d %H:%M" > .last_sync
+          echo "Last sync: $(cat .last_sync)"
